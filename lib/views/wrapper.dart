@@ -32,9 +32,9 @@ class _HomeState extends State<Home> {
         color: AppColors.primaryColorLight,
         backgroundColor: AppColors.white,
         items: const <Widget>[
-          Icon(FontAwesomeIcons.award, size: 30),
-          Icon(FontAwesomeIcons.listOl, size: 30),
-          Icon(FontAwesomeIcons.calendarDays, size: 30),
+          FaIcon(FontAwesomeIcons.trophy, size: 30),
+          FaIcon(FontAwesomeIcons.listOl, size: 30),
+          FaIcon(FontAwesomeIcons.calendarDays, size: 30),
         ],
         onTap: (index) {
           setState(() {
