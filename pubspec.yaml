@@ -38,6 +38,7 @@ dependencies:
   flutter_native_splash: ^2.3.0
   font_awesome_flutter: ^10.4.0
   http: ^1.0.0
+  flutter_local_notifications: ^14.1.0
 
 flutter_native_splash:
   color: "#ffffff"
