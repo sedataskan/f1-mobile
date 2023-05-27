@@ -1,4 +1,5 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:f1_flutter/constants/colors.dart';
 import 'package:f1_flutter/views/schedule/schedule.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +32,16 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: CurvedNavigationBar(
         color: AppColors.primaryColorLight,
         backgroundColor: AppColors.white,
-        items: const <Widget>[
-          FaIcon(FontAwesomeIcons.trophy, size: 30),
-          FaIcon(FontAwesomeIcons.listOl, size: 30),
-          FaIcon(FontAwesomeIcons.calendarDays, size: 30),
+        items: const [
+          CurvedNavigationBarItem(
+              child: FaIcon(FontAwesomeIcons.trophy, size: 30),
+              label: "Champions"),
+          CurvedNavigationBarItem(
+              child: FaIcon(FontAwesomeIcons.listOl, size: 30),
+              label: "Fixture"),
+          CurvedNavigationBarItem(
+              child: FaIcon(FontAwesomeIcons.calendarDays, size: 30),
+              label: "Schedule")
         ],
         onTap: (index) {
           setState(() {
