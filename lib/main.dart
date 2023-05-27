@@ -1,3 +1,4 @@
+import 'package:f1_flutter/theme/theme.dart';
 import 'package:f1_flutter/views/wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +11,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: AppTheme.lightTheme,
       title: 'F1 Mobile',
-      home: Home(),
+      home: const Home(),
     );
   }
 }
