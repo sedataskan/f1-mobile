@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="f1_flutter"
+        android:label="F1 Pulse"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
