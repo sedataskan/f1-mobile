@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.lightTheme,
-      title: 'F1 Mobile',
+      title: 'F1 Pulse',
       home: const Home(),
     );
   }
