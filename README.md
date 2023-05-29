@@ -1,16 +1,33 @@
-# f1_flutter
+<p align="center">
+  <h1> F1 Pulse </h1>
+</p>
 
-A new Flutter project.
+<p align="center">
+  <img src="assets/banner.png" >
+</p>
 
-## Getting Started
+<p align="center">
+  <br>
+  This application was created to make it simple for users to access seasonal statistics. Its user-friendly design makes it very simple to use.
+</p>
 
-This project is a starting point for a Flutter application.
+## Features
+- The application is quite clear and user-friendly.
+- Users can view the season's race schedule, fixtures and champions of past seasons.
+- Users can click the notification button from the calendar section. With this button, you can receive a race notification before the race.
 
-A few resources to get you started if this is your first Flutter project:
+<!-- ## ScreenShots
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<p align="center">
+  <img src="assets/preview/homepage.jpeg" width="200" >
+  <img src="assets/preview/edit_profile.jpeg" width="200" >
+  <img src="assets/preview/profile.jpeg" width="200" >
+</p>
+ -->
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Technologies
+<p align="center">
+  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" /> 
+  <img src="https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black"/>   
+  <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" />
+</p>
