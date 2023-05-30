@@ -41,8 +41,13 @@ dependencies:
   flutter_local_notifications: ^14.1.0
 
 flutter_native_splash:
-  color: "#ffffff"
+  color: "#F6F6F6"
   image: assets/logo.png
+
+  android_12:
+    image: assets/logo.png
+    color: "#F6F6F6"
+    icon_background_color: "#F6F6F6"
 
 dev_dependencies:
   flutter_test:
