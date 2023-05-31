@@ -52,15 +52,10 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Container(
-              color: AppColors.white,
-              child: Center(
-                child: Text('Error occurred: ${snapshot.error}'),
-              ),
-            );
+            return _error();
           } else {
             var data = snapshot.data!;
-            return _list(data);
+            return data.isEmpty ? _error() : _list(data);
           }
         },
       ),
@@ -221,6 +216,13 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  _error() {
+    return Container(
+      color: AppColors.white,
+      child: Center(child: Image.asset("assets/images/error.png")),
     );
   }
 }
