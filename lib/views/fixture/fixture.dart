@@ -1,4 +1,5 @@
 import 'package:f1_flutter/constants/colors.dart';
+import 'package:f1_flutter/views/fixture/fixture_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -89,87 +90,114 @@ class _FixtureScreenState extends State<FixtureScreen> {
           itemCount: data[0]["DriverStandings"].length,
           itemBuilder: (context, index) {
             return Container(
-              color: index % 2 != 0
-                  ? AppColors.primaryColorTint20
-                  : AppColors.white,
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppColors.black,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Center(
-                      child: Text(
-                        data[0]["DriverStandings"][index]["position"],
-                        style: const TextStyle(
-                          color: AppColors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              child: Material(
+                color: index % 2 != 0
+                    ? AppColors.primaryColorTint20
+                    : AppColors.white,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FixtureItem(
+                                position: data[0]["DriverStandings"][index]
+                                    ["position"],
+                                driverName: data[0]["DriverStandings"][index]
+                                        ["Driver"]["givenName"] +
+                                    " " +
+                                    data[0]["DriverStandings"][index]["Driver"]
+                                        ["familyName"],
+                                constructorName: data[0]["DriverStandings"]
+                                    [index]["Constructors"][0]["name"],
+                                points: data[0]["DriverStandings"][index]
+                                    ["points"],
+                                wikipedia: data[0]["DriverStandings"][index]
+                                    ["Driver"]["url"],
+                              )),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
-                          data[0]["DriverStandings"][index]["Driver"]
-                              ["givenName"],
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
                             color: AppColors.black,
-                            fontSize: 15,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Center(
+                            child: Text(
+                              data[0]["DriverStandings"][index]["position"],
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         ),
-                        Text(
-                          data[0]["DriverStandings"][index]["Driver"]
-                              ["familyName"],
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: AppColors.black,
-                            fontSize: 15,
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                data[0]["DriverStandings"][index]["Driver"]
+                                    ["givenName"],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                data[0]["DriverStandings"][index]["Driver"]
+                                    ["familyName"],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 90,
+                          height: 100,
+                          child: Center(
+                            child: Text(
+                              data[0]["DriverStandings"][index]["Constructors"]
+                                  [0]["name"],
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: AppColors.black,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          height: 100,
+                          child: Center(
+                            child: Text(
+                              data[0]["DriverStandings"][index]["points"],
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: AppColors.black,
+                                fontSize: 15,
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 90,
-                    height: 100,
-                    child: Center(
-                      child: Text(
-                        data[0]["DriverStandings"][index]["Constructors"][0]
-                            ["name"],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 50,
-                    height: 100,
-                    child: Center(
-                      child: Text(
-                        data[0]["DriverStandings"][index]["points"],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             );
           },
