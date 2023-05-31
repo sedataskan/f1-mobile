@@ -24,7 +24,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
           .toList();
     } else {
       print('Request failed with status: ${response.statusCode}.');
-      return [];
+      return _error();
     }
   }
 
@@ -68,15 +68,10 @@ class _FixtureScreenState extends State<FixtureScreen> {
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Container(
-                    color: AppColors.white,
-                    child: Center(
-                      child: Text('Error occurred: ${snapshot.error}'),
-                    ),
-                  );
+                  return _error();
                 } else {
                   var data = snapshot.data!;
-                  return _list(data);
+                  return data.isEmpty ? _error() : _list(data);
                 }
               },
             ),
@@ -285,6 +280,13 @@ class _FixtureScreenState extends State<FixtureScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  _error() {
+    return Container(
+      color: AppColors.white,
+      child: Center(child: Image.asset("assets/images/error.png")),
     );
   }
 }
