@@ -103,7 +103,22 @@ class _FixtureScreenState extends State<FixtureScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FixtureItem()),
+                      MaterialPageRoute(
+                          builder: (context) => FixtureItem(
+                                position: data[0]["DriverStandings"][index]
+                                    ["position"],
+                                driverName: data[0]["DriverStandings"][index]
+                                        ["Driver"]["givenName"] +
+                                    " " +
+                                    data[0]["DriverStandings"][index]["Driver"]
+                                        ["familyName"],
+                                constructorName: data[0]["DriverStandings"]
+                                    [index]["Constructors"][0]["name"],
+                                points: data[0]["DriverStandings"][index]
+                                    ["points"],
+                                wikipedia: data[0]["DriverStandings"][index]
+                                    ["Driver"]["url"],
+                              )),
                     );
                   },
                   child: Container(

@@ -1,55 +1,129 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 import '../../constants/colors.dart';
 
 class FixtureItem extends StatefulWidget {
-  const FixtureItem({super.key});
+  const FixtureItem(
+      {super.key,
+      required this.position,
+      required this.driverName,
+      required this.constructorName,
+      required this.points,
+      required this.wikipedia});
+
+  final String position;
+  final String driverName;
+  final String constructorName;
+  final String points;
+  final String wikipedia;
 
   @override
   State<FixtureItem> createState() => _FixtureItemState();
 }
 
 class _FixtureItemState extends State<FixtureItem> {
+  initState() {
+    super.initState();
+    getData(
+        widget.wikipedia.split("/")[widget.wikipedia.split("/").length - 1]);
+  }
+
+  late String imageLink =
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+
+  late String about = "Loading...";
+
+  bool isTriedGetData = false;
+
+  Future<void> getData(String wikipediaTitle) async {
+    try {
+      var url = Uri.https(
+          'en.wikipedia.org',
+          '/api/rest_v1/page/mobile-sections-lead/' +
+              Uri.decodeComponent(wikipediaTitle));
+
+      // Await the http get response, then decode the json-formatted response.
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var jsonResponse =
+            convert.jsonDecode(response.body) as Map<String, dynamic>;
+
+        setState(() {
+          imageLink = jsonResponse["image"]["urls"]["320"];
+          about = jsonResponse["description"];
+        });
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+        if (!isTriedGetData) {
+          getData(widget.driverName);
+          isTriedGetData = true;
+        } else {
+          setState(() {
+            about = "No data found";
+          });
+        }
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        about = "No data found";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = UserPreferences.myUser;
-
     return Scaffold(
       appBar: buildAppBar(context),
       backgroundColor: AppColors.primaryColorTint20,
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
-          ProfileWidget(
-            imagePath: user.imagePath,
-            onClicked: () async {},
+          Center(
+            child: Stack(
+              children: [
+                ClipOval(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Ink.image(
+                      image: NetworkImage(imageLink),
+                      fit: BoxFit.cover,
+                      width: 128,
+                      height: 128,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           const SizedBox(height: 24),
-          buildName(user),
+          buildName(widget.driverName, widget.constructorName),
           const SizedBox(height: 24),
-          NumbersWidget(),
+          NumbersWidget(position: widget.position, points: widget.points),
           const SizedBox(height: 48),
-          buildAbout(user),
+          buildAbout(about),
         ],
       ),
     );
   }
 
-  Widget buildName(User user) => Column(
+  Widget buildName(name, constructor) => Column(
         children: [
           Text(
-            user.name,
+            name,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
           const SizedBox(height: 4),
           Text(
-            user.email,
+            constructor,
             style: TextStyle(color: Colors.grey),
           )
         ],
       );
 
-  Widget buildAbout(User user) => Container(
+  Widget buildAbout(about) => Container(
         padding: EdgeInsets.symmetric(horizontal: 48),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +134,7 @@ class _FixtureItemState extends State<FixtureItem> {
             ),
             const SizedBox(height: 16),
             Text(
-              user.about,
+              about,
               style: TextStyle(fontSize: 16, height: 1.4),
             ),
           ],
@@ -101,15 +175,20 @@ AppBar buildAppBar(BuildContext context) {
 }
 
 class NumbersWidget extends StatelessWidget {
+  const NumbersWidget({
+    Key? key,
+    required this.position,
+    required this.points,
+  }) : super(key: key);
+  final String position;
+  final String points;
   @override
   Widget build(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          buildButton(context, '4.8', 'Ranking'),
+          buildButton(context, "#" + position, 'Position'),
           buildDivider(),
-          buildButton(context, '35', 'Following'),
-          buildDivider(),
-          buildButton(context, '50', 'Followers'),
+          buildButton(context, points, 'Points'),
         ],
       );
   Widget buildDivider() => Container(
@@ -138,99 +217,4 @@ class NumbersWidget extends StatelessWidget {
           ],
         ),
       );
-}
-
-class ProfileWidget extends StatelessWidget {
-  final String imagePath;
-  final VoidCallback onClicked;
-
-  const ProfileWidget({
-    Key? key,
-    required this.imagePath,
-    required this.onClicked,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
-
-    return Center(
-      child: Stack(
-        children: [
-          buildImage(),
-        ],
-      ),
-    );
-  }
-
-  Widget buildImage() {
-    final image = NetworkImage(imagePath);
-
-    return ClipOval(
-      child: Material(
-        color: Colors.transparent,
-        child: Ink.image(
-          image: image,
-          fit: BoxFit.cover,
-          width: 128,
-          height: 128,
-        ),
-      ),
-    );
-  }
-
-  Widget buildEditIcon(Color color) => buildCircle(
-        color: Colors.white,
-        all: 3,
-        child: buildCircle(
-          color: color,
-          all: 8,
-          child: Icon(
-            Icons.edit,
-            color: Colors.white,
-            size: 20,
-          ),
-        ),
-      );
-
-  Widget buildCircle({
-    required Widget child,
-    required double all,
-    required Color color,
-  }) =>
-      ClipOval(
-        child: Container(
-          padding: EdgeInsets.all(all),
-          color: color,
-          child: child,
-        ),
-      );
-}
-
-class UserPreferences {
-  static const myUser = User(
-    imagePath:
-        'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=333&q=80',
-    name: 'Sarah Abs',
-    email: 'sarah.abs@gmail.com',
-    about:
-        'Certified Personal Trainer and Nutritionist with years of experience in creating effective diets and training plans focused on achieving individual customers goals in a smooth way.',
-    isDarkMode: false,
-  );
-}
-
-class User {
-  final String imagePath;
-  final String name;
-  final String email;
-  final String about;
-  final bool isDarkMode;
-
-  const User({
-    required this.imagePath,
-    required this.name,
-    required this.email,
-    required this.about,
-    required this.isDarkMode,
-  });
 }
