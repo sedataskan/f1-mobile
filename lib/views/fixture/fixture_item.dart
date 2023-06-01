@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -85,14 +86,16 @@ class _FixtureItemState extends State<FixtureItem> {
             child: Stack(
               children: [
                 ClipOval(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Ink.image(
-                      image: NetworkImage(imageLink),
-                      fit: BoxFit.cover,
-                      width: 128,
-                      height: 128,
-                    ),
+                  child: CachedNetworkImage(
+                    imageUrl: imageLink,
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.contain,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 )
               ],
