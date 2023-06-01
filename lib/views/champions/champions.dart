@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'champions_item.dart';
+
 class ChampionsScreen extends StatefulWidget {
   const ChampionsScreen({super.key});
   @override
@@ -74,82 +76,117 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
                   ? AppColors.primaryColorTint20
                   : AppColors.white,
               padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppColors.black,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Center(
-                      child: Text(
-                        data[index]["season"],
-                        style: const TextStyle(
-                          color: AppColors.white,
-                          fontSize: 12,
-                        ),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChampionsItem(
+                        driverName: data[index]["DriverStandings"][0]["Driver"]
+                                ["givenName"] +
+                            " " +
+                            data[index]["DriverStandings"][0]["Driver"]
+                                ["familyName"],
+                        constructorName: data[index]["DriverStandings"][0]
+                            ["Constructors"][0]["name"],
+                        season: data[index]["season"],
+                        points: data[index]["DriverStandings"][0]["points"],
+                        wikipedia: data[index]["DriverStandings"][0]["Driver"]
+                            ["url"],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          data[index]["DriverStandings"][0]["Driver"]
-                              ["givenName"],
-                          style: const TextStyle(
-                            color: AppColors.black,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          data[index]["DriverStandings"][0]["Driver"]
-                              ["familyName"],
-                          style: const TextStyle(
-                            color: AppColors.black,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 90,
-                    height: 100,
-                    child: Center(
-                      child: Text(
-                        data[index]["DriverStandings"][0]["Constructors"][0]
-                            ["name"],
-                        style: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 50,
-                    height: 100,
-                    child: Center(
-                      child: Text(
-                        data[index]["DriverStandings"][0]["points"],
-                        style: const TextStyle(
-                          color: AppColors.black,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _season(data, index),
+                    _name(data, index),
+                    _constructor(data, index),
+                    _points(data, index),
+                  ],
+                ),
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Container _season(List<dynamic> data, int index) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: AppColors.black,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Center(
+        child: Text(
+          data[index]["season"],
+          style: const TextStyle(
+            color: AppColors.white,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox _name(List<dynamic> data, int index) {
+    return SizedBox(
+      width: 100,
+      height: 100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            data[index]["DriverStandings"][0]["Driver"]["givenName"],
+            style: const TextStyle(
+              color: AppColors.black,
+              fontSize: 15,
+            ),
+          ),
+          Text(
+            data[index]["DriverStandings"][0]["Driver"]["familyName"],
+            style: const TextStyle(
+              color: AppColors.black,
+              fontSize: 15,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _constructor(List<dynamic> data, int index) {
+    return SizedBox(
+      width: 90,
+      height: 100,
+      child: Center(
+        child: Text(
+          data[index]["DriverStandings"][0]["Constructors"][0]["name"],
+          style: const TextStyle(
+            color: AppColors.black,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox _points(List<dynamic> data, int index) {
+    return SizedBox(
+      width: 50,
+      height: 100,
+      child: Center(
+        child: Text(
+          data[index]["DriverStandings"][0]["points"],
+          style: const TextStyle(
+            color: AppColors.black,
+            fontSize: 15,
+          ),
         ),
       ),
     );
