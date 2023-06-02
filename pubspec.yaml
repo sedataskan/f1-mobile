@@ -40,6 +40,7 @@ dependencies:
   http: ^0.13.0
   flutter_local_notifications: ^14.1.0
   cached_network_image: ^3.2.3
+  syncfusion_flutter_calendar: ^21.2.8
 
 flutter_native_splash:
   color: "#F6F6F6"
