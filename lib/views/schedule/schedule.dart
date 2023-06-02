@@ -65,16 +65,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           child: SfCalendar(
             view: CalendarView.schedule,
             dataSource: RaceDataSource(_getDataSource()),
-            // by default the month appointment display mode set as Indicator, we can
-            // change the display mode as appointment using the appointment display
-            // mode property
-            monthViewSettings: const MonthViewSettings(
-                appointmentDisplayMode:
-                    MonthAppointmentDisplayMode.appointment),
             onTap: (CalendarTapDetails details) {
-              print(details);
+              print(details.appointments?[0].getEventName());
             },
-            showNavigationArrow: true,
           ),
         ));
   }

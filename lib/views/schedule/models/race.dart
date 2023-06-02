@@ -18,4 +18,16 @@ class Race {
 
   /// IsAllDay which is equivalent to isAllDay property of [Appointment].
   bool isAllDay;
+
+  getEventName() {
+    return eventName;
+  }
+
+  getFrom() {
+    return from;
+  }
+
+  getTo() {
+    return to;
+  }
 }
