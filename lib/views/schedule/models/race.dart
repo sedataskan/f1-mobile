@@ -30,4 +30,8 @@ class Race {
   getTo() {
     return to;
   }
+
+  getBackground() {
+    return background;
+  }
 }

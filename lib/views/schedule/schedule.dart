@@ -124,6 +124,34 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           padding: const EdgeInsets.all(0.0),
           child: SfCalendar(
             view: CalendarView.schedule,
+            appointmentBuilder: (BuildContext context,
+                CalendarAppointmentDetails calendarAppointmentDetails) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: calendarAppointmentDetails.appointments.first
+                      .getBackground(),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    calendarAppointmentDetails.appointments.first
+                            .getEventName() +
+                        "\n" +
+                        calendarAppointmentDetails.appointments.first
+                            .getFrom()
+                            .toString()
+                            .split(" ")[1]
+                            .split(".")[0]
+                            .substring(0, 5),
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              );
+            },
             scheduleViewSettings: ScheduleViewSettings(
               appointmentItemHeight: 60,
               monthHeaderSettings: MonthHeaderSettings(
