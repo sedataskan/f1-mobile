@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:instant/instant.dart';
 
 import '../../constants/colors.dart';
 import '../../services/notification_service.dart';
@@ -71,10 +72,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       final day = data[i]["date"].split("-")[2];
       final time = data[i]["time"].split(":")[0];
 
-      final DateTime date = DateTime(
-          int.parse(year), int.parse(month), int.parse(day), int.parse(time));
+      final DateTime date = DateTime.utc(int.parse(year), int.parse(month),
+              int.parse(day), int.parse(time))
+          .toLocal();
 
-      final color = date == today
+      final color = date.day == today.day
           ? Colors.green
           : date.isBefore(today)
               ? Colors.red
@@ -167,9 +169,47 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             todayHighlightColor: AppColors.primaryColor,
             dataSource: RaceDataSource(_getDataSource(data)),
             onTap: (CalendarTapDetails details) {
-              print(details.appointments?[0].getEventName());
+              String eventName = details.appointments?[0].getEventName() ?? "";
+              String eventDate =
+                  details.appointments?[0].getFrom().toString().split(".")[0] ??
+                      "";
+              String eventTime = eventDate.substring(0, eventDate.length - 3);
+              String year = eventDate.split("-")[0];
+              String month = eventDate.split("-")[1].startsWith("0")
+                  ? eventDate.split("-")[1].substring(1)
+                  : eventDate.split("-")[1];
+              String day = eventDate.split("-")[2].startsWith("0")
+                  ? eventDate.split("-")[2].substring(1, 2)
+                  : eventDate.split("-")[2].substring(0, 2);
+
+              String hour = eventTime.split(" ")[1].split(":")[0];
+              String minute = eventTime.split(" ")[1].split(":")[1];
+              if (details.appointments?[0].getEventName() != null) {
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return _dialog(eventName, eventTime);
+                  },
+                );
+              }
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  _dialog(eventName, eventTime) {
+    return SizedBox(
+      height: 300,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(eventName, style: TextStyle(fontSize: 20)),
+            Text(eventTime, style: TextStyle(fontSize: 15)),
+          ],
         ),
       ),
     );
