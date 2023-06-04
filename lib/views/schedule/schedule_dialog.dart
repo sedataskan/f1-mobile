@@ -77,41 +77,46 @@ class _ScheduleDialogState extends State<ScheduleDialog> {
   }
 
   _dialog(eventName, DateTime eventTime, eventLoc, eventUrl) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              eventName,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                eventName,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                DateFormatter.getFormattedDate(eventTime),
+                style: TextStyle(fontSize: 15),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(eventLoc, style: TextStyle(fontSize: 15)),
+              Text(DateFormatter.getFormattedTime(eventTime),
+                  style: TextStyle(fontSize: 15)),
+            ],
+          ),
+          SizedBox(height: 10),
+          CachedNetworkImage(
+            imageUrl: eventUrl,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                Center(
+              child: CircularProgressIndicator(),
             ),
-            Text(
-              DateFormatter.getFormattedDate(eventTime),
-              style: TextStyle(fontSize: 15),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(eventLoc, style: TextStyle(fontSize: 15)),
-            Text(DateFormatter.getFormattedTime(eventTime),
-                style: TextStyle(fontSize: 15)),
-          ],
-        ),
-        SizedBox(height: 10),
-        CachedNetworkImage(
-          imageUrl: eventUrl,
-          placeholder: (context, url) => const CircularProgressIndicator(),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
-        SizedBox(height: 10),
-      ],
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:f1_flutter/views/components/schedule_skeleton.dart';
 import 'package:f1_flutter/views/schedule/schedule_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -75,10 +76,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           .toLocal();
 
       final color = date.day == today.day
-          ? Colors.green
+          ? AppColors.today
           : date.isBefore(today)
-              ? Colors.red
-              : Colors.blue;
+              ? AppColors.past
+              : AppColors.future;
 
       races.add(Race(data[i]["raceName"], date, date, color, false,
           data[i]["Circuit"]["Location"]["locality"], data[i]["url"]));
@@ -94,25 +95,26 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         title: const Text('Schedule', style: TextStyle(color: Colors.black)),
         backgroundColor: AppColors.primaryColorLight,
       ),
-      body: FutureBuilder(
-        future: getData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-              color: AppColors.white,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return _error();
-          } else {
-            var data = snapshot.data!;
-            return data.isEmpty ? _error() : _races(data);
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
         },
+        child: FutureBuilder(
+          future: getData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                color: AppColors.white,
+                child: DetailSkeleton(),
+              );
+            } else if (snapshot.hasError) {
+              return _error();
+            } else {
+              var data = snapshot.data!;
+              return data.isEmpty ? _error() : _races(data);
+            }
+          },
+        ),
       ),
     );
   }
@@ -123,98 +125,100 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(0.0),
-          child: SfCalendar(
-            view: CalendarView.schedule,
-            appointmentBuilder: (BuildContext context,
-                CalendarAppointmentDetails calendarAppointmentDetails) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: calendarAppointmentDetails.appointments.first
-                      .getBackground(),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    calendarAppointmentDetails.appointments.first
-                            .getEventName() +
-                        "\n" +
-                        calendarAppointmentDetails.appointments.first
-                            .getFrom()
-                            .toString()
-                            .split(" ")[1]
-                            .split(".")[0]
-                            .substring(0, 5),
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
+          child: Container(
+            child: SfCalendar(
+              view: CalendarView.schedule,
+              appointmentBuilder: (BuildContext context,
+                  CalendarAppointmentDetails calendarAppointmentDetails) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: calendarAppointmentDetails.appointments.first
+                        .getBackground(),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      calendarAppointmentDetails.appointments.first
+                              .getEventName() +
+                          "\n" +
+                          calendarAppointmentDetails.appointments.first
+                              .getFrom()
+                              .toString()
+                              .split(" ")[1]
+                              .split(".")[0]
+                              .substring(0, 5),
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-            scheduleViewSettings: ScheduleViewSettings(
-              appointmentItemHeight: 60,
-              monthHeaderSettings: MonthHeaderSettings(
-                height: 70,
-                textAlign: TextAlign.start,
-                monthTextStyle: TextStyle(
-                  fontSize: 20,
-                  color: AppColors.black,
-                ),
-                backgroundColor: AppColors.primaryColorLight,
-              ),
-            ),
-            todayHighlightColor: AppColors.primaryColor,
-            dataSource: RaceDataSource(_getDataSource(data)),
-            onTap: (CalendarTapDetails details) {
-              String eventName = details.appointments?[0].getEventName() ?? "";
-              String eventLoc = details.appointments?[0].getEventLoc() ?? "";
-
-              DateTime eventDate = details.appointments?[0].getFrom() ?? "";
-              String year = eventDate.year.toString();
-              // String eventTime = eventDate.substring(0, eventDate.length - 3);
-              // String year = eventDate.split("-")[0];
-              // String month = eventDate.split("-")[1].startsWith("0")
-              //     ? eventDate.split("-")[1].substring(1)
-              //     : eventDate.split("-")[1];
-              // String day = eventDate.split("-")[2].startsWith("0")
-              //     ? eventDate.split("-")[2].substring(1, 2)
-              //     : eventDate.split("-")[2].substring(0, 2);
-
-              // String hour = eventTime.split(" ")[1].split(":")[0];
-              // String minute = eventTime.split(" ")[1].split(":")[1];
-
-              String eventUrl = details.appointments?[0]
-                      .getEventUrl()
-                      .replaceAll(year + "_", "") ??
-                  "";
-              print(eventUrl);
-              if (details.appointments?[0].getEventName() != null) {
-                // return AlertDialog(
-                //   content: ScheduleDialog(
-                //       eventName: eventName,
-                //       eventTime: eventDate,
-                //       eventLoc: eventLoc,
-                //       wikipedia: eventUrl,
-                //     ),
-                // );
-                showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      insetPadding: EdgeInsets.all(0),
-                      content: ScheduleDialog(
-                        eventName: eventName,
-                        eventTime: eventDate,
-                        eventLoc: eventLoc,
-                        wikipedia: eventUrl,
-                      ),
-                    );
-                  },
                 );
-              }
-            },
+              },
+              scheduleViewSettings: ScheduleViewSettings(
+                appointmentItemHeight: 60,
+                monthHeaderSettings: MonthHeaderSettings(
+                  height: 70,
+                  textAlign: TextAlign.start,
+                  monthTextStyle: TextStyle(
+                    fontSize: 20,
+                    color: AppColors.black,
+                  ),
+                  backgroundColor: AppColors.primaryColorLight,
+                ),
+              ),
+              todayHighlightColor: AppColors.primaryColor,
+              dataSource: RaceDataSource(_getDataSource(data)),
+              onTap: (CalendarTapDetails details) {
+                String eventName =
+                    details.appointments?[0].getEventName() ?? "";
+                String eventLoc = details.appointments?[0].getEventLoc() ?? "";
+
+                DateTime eventDate = details.appointments?[0].getFrom() ?? "";
+                String year = eventDate.year.toString();
+                // String eventTime = eventDate.substring(0, eventDate.length - 3);
+                // String year = eventDate.split("-")[0];
+                // String month = eventDate.split("-")[1].startsWith("0")
+                //     ? eventDate.split("-")[1].substring(1)
+                //     : eventDate.split("-")[1];
+                // String day = eventDate.split("-")[2].startsWith("0")
+                //     ? eventDate.split("-")[2].substring(1, 2)
+                //     : eventDate.split("-")[2].substring(0, 2);
+
+                // String hour = eventTime.split(" ")[1].split(":")[0];
+                // String minute = eventTime.split(" ")[1].split(":")[1];
+
+                String eventUrl = details.appointments?[0]
+                        .getEventUrl()
+                        .replaceAll(year + "_", "") ??
+                    "";
+                if (details.appointments?[0].getEventName() != null) {
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(
+                            color: details.appointments?[0].getBackground() ??
+                                AppColors.white,
+                            width: 5,
+                          ),
+                        ),
+                        insetPadding: EdgeInsets.all(0),
+                        content: ScheduleDialog(
+                          eventName: eventName,
+                          eventTime: eventDate,
+                          eventLoc: eventLoc,
+                          wikipedia: eventUrl,
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
