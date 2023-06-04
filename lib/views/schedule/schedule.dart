@@ -1,12 +1,10 @@
+import 'package:f1_flutter/views/schedule/schedule_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:instant/instant.dart';
-
 import '../../constants/colors.dart';
 import '../../services/notification_service.dart';
 import 'models/race.dart';
 import 'models/race_data_source.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -82,7 +80,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               ? Colors.red
               : Colors.blue;
 
-      races.add(Race(data[i]["raceName"], date, date, color, false));
+      races.add(Race(data[i]["raceName"], date, date, color, false,
+          data[i]["Circuit"]["Location"]["locality"], data[i]["url"]));
     }
 
     return races;
@@ -170,46 +169,46 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             dataSource: RaceDataSource(_getDataSource(data)),
             onTap: (CalendarTapDetails details) {
               String eventName = details.appointments?[0].getEventName() ?? "";
+              String eventLoc = details.appointments?[0].getEventLoc() ?? "";
+
               String eventDate =
                   details.appointments?[0].getFrom().toString().split(".")[0] ??
                       "";
               String eventTime = eventDate.substring(0, eventDate.length - 3);
               String year = eventDate.split("-")[0];
-              String month = eventDate.split("-")[1].startsWith("0")
-                  ? eventDate.split("-")[1].substring(1)
-                  : eventDate.split("-")[1];
-              String day = eventDate.split("-")[2].startsWith("0")
-                  ? eventDate.split("-")[2].substring(1, 2)
-                  : eventDate.split("-")[2].substring(0, 2);
+              // String month = eventDate.split("-")[1].startsWith("0")
+              //     ? eventDate.split("-")[1].substring(1)
+              //     : eventDate.split("-")[1];
+              // String day = eventDate.split("-")[2].startsWith("0")
+              //     ? eventDate.split("-")[2].substring(1, 2)
+              //     : eventDate.split("-")[2].substring(0, 2);
 
-              String hour = eventTime.split(" ")[1].split(":")[0];
-              String minute = eventTime.split(" ")[1].split(":")[1];
+              // String hour = eventTime.split(" ")[1].split(":")[0];
+              // String minute = eventTime.split(" ")[1].split(":")[1];
+
+              String eventUrl = details.appointments?[0]
+                      .getEventUrl()
+                      .replaceAll(year + "_", "") ??
+                  "";
               if (details.appointments?[0].getEventName() != null) {
                 showModalBottomSheet<void>(
                   context: context,
                   builder: (BuildContext context) {
-                    return _dialog(eventName, eventTime);
+                    return InkWell(
+                      onTap: () {
+                        ScheduleDialog(
+                          eventName: eventName,
+                          eventTime: eventTime,
+                          eventLoc: eventLoc,
+                          wikipedia: eventUrl,
+                        );
+                      },
+                    );
                   },
                 );
               }
             },
           ),
-        ),
-      ),
-    );
-  }
-
-  _dialog(eventName, eventTime) {
-    return SizedBox(
-      height: 300,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(eventName, style: TextStyle(fontSize: 20)),
-            Text(eventTime, style: TextStyle(fontSize: 15)),
-          ],
         ),
       ),
     );
