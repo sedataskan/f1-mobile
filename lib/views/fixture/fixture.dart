@@ -1,4 +1,5 @@
 import 'package:f1_flutter/constants/colors.dart';
+import 'package:f1_flutter/views/components/schedule_skeleton.dart';
 import 'package:f1_flutter/views/fixture/fixture_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -52,32 +53,51 @@ class _FixtureScreenState extends State<FixtureScreen> {
       appBar: AppBar(
           backgroundColor: AppColors.primaryColorLight,
           title: _buildTopHeader()),
-      body: Column(
-        children: [
-          _buildBottomHeader(),
-          Expanded(
-            child: FutureBuilder(
-              future: getData(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Container(
-                    color: AppColors.white,
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primaryColor,
+
+      // TODO: created for weekly results.
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => {},
+        label: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Weekly"),
+            const SizedBox(width: 10),
+            Icon(Icons.filter_list),
+          ],
+        ),
+      ),
+      body: RefreshIndicator(
+        color: AppColors.primaryColor,
+        onRefresh: () async {
+          setState(() {
+            getData();
+          });
+        },
+        child: Column(
+          children: [
+            _buildBottomHeader(),
+            Expanded(
+              child: FutureBuilder(
+                future: getData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(
+                      color: AppColors.white,
+                      child: const Center(
+                        child: DetailSkeleton(),
                       ),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return _error();
-                } else {
-                  var data = snapshot.data!;
-                  return data.isEmpty ? _error() : _list(data);
-                }
-              },
+                    );
+                  } else if (snapshot.hasError) {
+                    return _error();
+                  } else {
+                    var data = snapshot.data!;
+                    return data.isEmpty ? _error() : _list(data);
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

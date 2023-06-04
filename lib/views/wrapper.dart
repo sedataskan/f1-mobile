@@ -22,12 +22,13 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: AppColors.white,
       // Scaffold is a widget that implements the basic material design visual layout structure.
-      body: Center(
-        child: _currentIndex == 0
-            ? const ChampionsScreen()
-            : _currentIndex == 1
-                ? const FixtureScreen()
-                : const ScheduleScreen(),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          const ChampionsScreen(),
+          const FixtureScreen(),
+          const ScheduleScreen(),
+        ],
       ),
       bottomNavigationBar: CurvedNavigationBar(
         color: AppColors.primaryColorLight,

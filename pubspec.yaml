@@ -42,6 +42,7 @@ dependencies:
   cached_network_image: ^3.2.3
   syncfusion_flutter_calendar: ^21.2.8
   instant: ^0.5.1
+  skeletons: ^0.0.3
 
 flutter_native_splash:
   color: "#F6F6F6"

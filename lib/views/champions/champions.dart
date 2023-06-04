@@ -1,4 +1,5 @@
 import 'package:f1_flutter/constants/colors.dart';
+import 'package:f1_flutter/views/components/schedule_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -41,25 +42,31 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: AppColors.primaryColorLight, title: _buildHeader()),
-      body: FutureBuilder(
-        future: getData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-              color: AppColors.white,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return _error();
-          } else {
-            var data = snapshot.data!;
-            return data.isEmpty ? _error() : _list(data);
-          }
+      body: RefreshIndicator(
+        color: AppColors.primaryColor,
+        onRefresh: () async {
+          setState(() {
+            getData();
+          });
         },
+        child: FutureBuilder(
+          future: getData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                color: AppColors.white,
+                child: const Center(
+                  child: DetailSkeleton(),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return _error();
+            } else {
+              var data = snapshot.data!;
+              return data.isEmpty ? _error() : _list(data);
+            }
+          },
+        ),
       ),
     );
   }
