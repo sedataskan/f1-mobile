@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:f1_flutter/helper/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -12,7 +13,7 @@ class ScheduleDialog extends StatefulWidget {
       required this.wikipedia});
 
   final String eventName;
-  final String eventTime;
+  final DateTime eventTime;
   final String eventLoc;
   final String wikipedia;
 
@@ -27,8 +28,7 @@ class _ScheduleDialogState extends State<ScheduleDialog> {
         widget.wikipedia.split("/")[widget.wikipedia.split("/").length - 1]);
   }
 
-  late String imageLink =
-      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  late String imageLink = " ";
 
   late String about = "Loading...";
 
@@ -73,28 +73,45 @@ class _ScheduleDialogState extends State<ScheduleDialog> {
   @override
   Widget build(BuildContext context) {
     return _dialog(
-        widget.eventName, widget.eventTime, widget.eventLoc, widget.wikipedia);
+        widget.eventName, widget.eventTime, widget.eventLoc, imageLink);
   }
 
-  _dialog(eventName, eventTime, eventLoc, eventUrl) {
-    return SizedBox(
-      height: 300,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(eventName, style: TextStyle(fontSize: 20)),
-            Text(eventTime, style: TextStyle(fontSize: 15)),
-            Text(eventLoc, style: TextStyle(fontSize: 15)),
-            CachedNetworkImage(
-              imageUrl: eventUrl,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+  _dialog(eventName, DateTime eventTime, eventLoc, eventUrl) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              eventName,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              DateFormatter.getFormattedDate(eventTime),
+              style: TextStyle(fontSize: 15),
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(eventLoc, style: TextStyle(fontSize: 15)),
+            Text(DateFormatter.getFormattedTime(eventTime),
+                style: TextStyle(fontSize: 15)),
+          ],
+        ),
+        SizedBox(height: 10),
+        CachedNetworkImage(
+          imageUrl: eventUrl,
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+        SizedBox(height: 10),
+      ],
     );
   }
 }

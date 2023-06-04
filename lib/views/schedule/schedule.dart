@@ -171,11 +171,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               String eventName = details.appointments?[0].getEventName() ?? "";
               String eventLoc = details.appointments?[0].getEventLoc() ?? "";
 
-              String eventDate =
-                  details.appointments?[0].getFrom().toString().split(".")[0] ??
-                      "";
-              String eventTime = eventDate.substring(0, eventDate.length - 3);
-              String year = eventDate.split("-")[0];
+              DateTime eventDate = details.appointments?[0].getFrom() ?? "";
+              String year = eventDate.year.toString();
+              // String eventTime = eventDate.substring(0, eventDate.length - 3);
+              // String year = eventDate.split("-")[0];
               // String month = eventDate.split("-")[1].startsWith("0")
               //     ? eventDate.split("-")[1].substring(1)
               //     : eventDate.split("-")[1];
@@ -190,19 +189,27 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       .getEventUrl()
                       .replaceAll(year + "_", "") ??
                   "";
+              print(eventUrl);
               if (details.appointments?[0].getEventName() != null) {
-                showModalBottomSheet<void>(
+                // return AlertDialog(
+                //   content: ScheduleDialog(
+                //       eventName: eventName,
+                //       eventTime: eventDate,
+                //       eventLoc: eventLoc,
+                //       wikipedia: eventUrl,
+                //     ),
+                // );
+                showDialog<void>(
                   context: context,
                   builder: (BuildContext context) {
-                    return InkWell(
-                      onTap: () {
-                        ScheduleDialog(
-                          eventName: eventName,
-                          eventTime: eventTime,
-                          eventLoc: eventLoc,
-                          wikipedia: eventUrl,
-                        );
-                      },
+                    return AlertDialog(
+                      insetPadding: EdgeInsets.all(0),
+                      content: ScheduleDialog(
+                        eventName: eventName,
+                        eventTime: eventDate,
+                        eventLoc: eventLoc,
+                        wikipedia: eventUrl,
+                      ),
                     );
                   },
                 );
