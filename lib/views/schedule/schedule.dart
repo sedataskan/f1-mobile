@@ -75,7 +75,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               int.parse(day), int.parse(time))
           .toLocal();
 
-      final color = date.day == today.day
+      final color = (date.day == today.day &&
+              date.month == today.month &&
+              date.year == today.year)
           ? AppColors.today
           : date.isBefore(today)
               ? AppColors.past

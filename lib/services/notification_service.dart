@@ -51,6 +51,7 @@ class NotificationService {
       iOS: iOSPlatformChannelSpecifics,
     );
 
+    // ignore: deprecated_member_use
     await notificationsPlugin.schedule(
       id,
       title,
