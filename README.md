@@ -24,7 +24,6 @@
   <img src="assets/preview/profile.jpeg" width="200" >
 </p>
  -->
- 
 
 ## Technologies
 <p align="center">
