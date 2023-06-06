@@ -1,4 +1,4 @@
-import 'package:f1_flutter/views/components/schedule_skeleton.dart';
+import 'package:f1_flutter/views/components/skeleton.dart';
 import 'package:f1_flutter/views/schedule/schedule_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';

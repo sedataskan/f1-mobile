@@ -1,5 +1,5 @@
 import 'package:f1_flutter/constants/colors.dart';
-import 'package:f1_flutter/views/components/schedule_skeleton.dart';
+import 'package:f1_flutter/views/components/skeleton.dart';
 import 'package:f1_flutter/views/fixture/fixture_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
