@@ -78,7 +78,7 @@ class _ChampionsItemState extends State<ChampionsItem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      backgroundColor: AppColors.primaryColorTint20,
+      backgroundColor: AppColors.primaryColorLight,
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
@@ -121,7 +121,7 @@ class _ChampionsItemState extends State<ChampionsItem> {
           const SizedBox(height: 4),
           Text(
             constructor,
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: AppColors.black.withOpacity(0.5)),
           )
         ],
       );
@@ -158,7 +158,8 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, shape: StadiumBorder(),
+          foregroundColor: Colors.white,
+          shape: StadiumBorder(),
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         ),
         child: Text(text),
