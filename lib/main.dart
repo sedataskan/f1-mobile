@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       title: 'F1 Pulse',
       home: const Home(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
