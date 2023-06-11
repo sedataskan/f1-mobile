@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import './notification_button.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../constants/colors.dart';
-import '../../services/notification_service.dart';
 import 'models/race.dart';
 import 'models/race_data_source.dart';
 import 'package:http/http.dart' as http;
@@ -160,17 +159,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                 DateTime eventDate = details.appointments?[0].getFrom() ?? "";
                 String year = eventDate.year.toString();
-                // String eventTime = eventDate.substring(0, eventDate.length - 3);
-                // String year = eventDate.split("-")[0];
-                // String month = eventDate.split("-")[1].startsWith("0")
-                //     ? eventDate.split("-")[1].substring(1)
-                //     : eventDate.split("-")[1];
-                // String day = eventDate.split("-")[2].startsWith("0")
-                //     ? eventDate.split("-")[2].substring(1, 2)
-                //     : eventDate.split("-")[2].substring(0, 2);
-
-                // String hour = eventTime.split(" ")[1].split(":")[0];
-                // String minute = eventTime.split(" ")[1].split(":")[1];
 
                 String eventUrl = details.appointments?[0]
                         .getEventUrl()

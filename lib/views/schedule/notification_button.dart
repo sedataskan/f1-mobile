@@ -7,8 +7,6 @@ import '../../services/notification_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import 'models/race.dart';
-
 class NotificationButton extends StatefulWidget {
   const NotificationButton({super.key});
 
@@ -51,7 +49,8 @@ class _NotificationButtonState extends State<NotificationButton> {
           if (snapshot.hasError) {
             return _error();
           } else {
-            notification_activity = storage.getItem('notification_activity');
+            notification_activity =
+                storage.getItem('notification_activity') ?? false;
             return _notificationButton(notification_activity);
           }
         },
@@ -109,14 +108,17 @@ class _NotificationButtonState extends State<NotificationButton> {
                             .toLocal();
 
                         if (date.isAfter(today)) {
+                          // DateTime testDate =
+                          //     DateTime.now().add(Duration(seconds: 5));
                           DateTime scheduledDate =
                               date.subtract(Duration(hours: 1));
 
                           notificationService.scheduleNotification(
                             id: int.parse(data[i]["round"]),
-                            title: data[i]["raceName"],
-                            body: DateFormatter.getFormattedDate(date) +
-                                " " +
+                            title: "Race Time!",
+                            body: data[i]["raceName"].split("Grand")[0] +
+                                "GP" +
+                                " - " +
                                 DateFormatter.getFormattedTime(date),
                             scheduledDate: scheduledDate,
                           );
