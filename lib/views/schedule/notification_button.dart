@@ -1,9 +1,13 @@
+import 'package:f1_flutter/helper/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:f1_flutter/constants/colors.dart';
 
 import '../../services/notification_service.dart';
-import '../components/skeleton.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
+
+import 'models/race.dart';
 
 class NotificationButton extends StatefulWidget {
   const NotificationButton({super.key});
@@ -20,6 +24,21 @@ class _NotificationButtonState extends State<NotificationButton> {
   void initState() {
     super.initState();
     notificationService.initNotification();
+  }
+
+  Future<List<dynamic>> getData() async {
+    var url = Uri.https('ergast.com', '/api/f1/current.json', {'q': '{http}'});
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonResponse =
+          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      return jsonResponse["MRData"]["RaceTable"]["Races"].toList();
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      return [];
+    }
   }
 
   @override
@@ -64,7 +83,7 @@ class _NotificationButtonState extends State<NotificationButton> {
                 ),
                 TextButton(
                   child: Text("Evet"),
-                  onPressed: () {
+                  onPressed: () async {
                     storage.setItem(
                         "notification_activity", !notification_activity);
                     setState(() {
@@ -72,27 +91,40 @@ class _NotificationButtonState extends State<NotificationButton> {
                     });
 
                     if (notification_activity) {
-                      DateTime scheduledDate = DateTime.now().add(
-                          Duration(seconds: 5)); // Örnek olarak 1 saat sonra
-                      notificationService.scheduleNotification(
-                        id: 1,
-                        title: '1',
-                        body: 'Bildirim İçeriği',
-                        scheduledDate: scheduledDate,
-                      );
-                      DateTime scheduledDate2 = DateTime.now().add(
-                          Duration(seconds: 10)); // Örnek olarak 1 saat sonra
-                      notificationService.scheduleNotification(
-                        id: 2,
-                        title: '2',
-                        body: 'Bildirim İçeriği',
-                        scheduledDate: scheduledDate2,
-                      );
+                      final data = await getData();
+
+                      final DateTime today = DateTime.now();
+
+                      for (var i = 0; i < data.length; i++) {
+                        final year = data[i]["date"].split("-")[0];
+                        final month = data[i]["date"].split("-")[1];
+                        final day = data[i]["date"].split("-")[2];
+                        final time = data[i]["time"].split(":")[0];
+
+                        final DateTime date = DateTime.utc(
+                                int.parse(year),
+                                int.parse(month),
+                                int.parse(day),
+                                int.parse(time))
+                            .toLocal();
+
+                        if (date.isAfter(today)) {
+                          DateTime scheduledDate =
+                              date.subtract(Duration(hours: 1));
+
+                          notificationService.scheduleNotification(
+                            id: int.parse(data[i]["round"]),
+                            title: data[i]["raceName"],
+                            body: DateFormatter.getFormattedDate(date) +
+                                " " +
+                                DateFormatter.getFormattedTime(date),
+                            scheduledDate: scheduledDate,
+                          );
+                        }
+                      }
                     } else {
                       notificationService.cancelAllNotifications();
                     }
-
-                    print(notification_activity);
                     Navigator.of(context).pop();
                   },
                 ),
