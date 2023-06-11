@@ -1,21 +1,20 @@
 import 'package:f1_flutter/constants/colors.dart';
 import 'package:f1_flutter/views/components/skeleton.dart';
-import 'package:f1_flutter/views/fixture/fixture_item.dart';
-import 'package:f1_flutter/views/weekly/weekly.dart';
+import 'package:f1_flutter/views/weekly/weekly_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-class FixtureScreen extends StatefulWidget {
-  const FixtureScreen({super.key});
+class WeeklyScreen extends StatefulWidget {
+  const WeeklyScreen({super.key});
   @override
-  State<FixtureScreen> createState() => _FixtureScreenState();
+  State<WeeklyScreen> createState() => _WeeklyScreenState();
 }
 
-class _FixtureScreenState extends State<FixtureScreen> {
+class _WeeklyScreenState extends State<WeeklyScreen> {
   Future<List<dynamic>> getData() async {
     var url = Uri.https(
-        'ergast.com', '/api/f1/current/driverStandings.json', {'q': '{http}'});
+        'ergast.com', 'api/f1/current/last/results.json', {'q': '{http}'});
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
@@ -23,8 +22,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
       var jsonResponse =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
 
-      return jsonResponse["MRData"]["StandingsTable"]["StandingsLists"]
-          .toList();
+      return jsonResponse["MRData"]["RaceTable"]["Races"].toList();
     } else {
       print('Request failed with status: ${response.statusCode}.');
       return _error();
@@ -54,25 +52,6 @@ class _FixtureScreenState extends State<FixtureScreen> {
       appBar: AppBar(
           backgroundColor: AppColors.primaryColorLight,
           title: _buildTopHeader()),
-      floatingActionButton: FloatingActionButton.extended(
-        //go to weekly screen when pressed
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const WeeklyScreen(),
-            ),
-          );
-        },
-        label: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Weekly"),
-            const SizedBox(width: 10),
-            Icon(Icons.filter_list),
-          ],
-        ),
-      ),
       body: RefreshIndicator(
         color: AppColors.primaryColor,
         onRefresh: () async {
@@ -104,147 +83,6 @@ class _FixtureScreenState extends State<FixtureScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Container _list(List<dynamic> data) {
-    return Container(
-      color: AppColors.white,
-      child: Center(
-        child: ListView.builder(
-          itemCount: data[0]["DriverStandings"].length,
-          itemBuilder: (context, index) {
-            return Container(
-              child: Material(
-                color: index % 2 != 0
-                    ? AppColors.primaryColorTint20
-                    : AppColors.white,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FixtureItem(
-                          position: data[0]["DriverStandings"][index]
-                              ["position"],
-                          driverName: data[0]["DriverStandings"][index]
-                                  ["Driver"]["givenName"] +
-                              " " +
-                              data[0]["DriverStandings"][index]["Driver"]
-                                  ["familyName"],
-                          constructorName: data[0]["DriverStandings"][index]
-                              ["Constructors"][0]["name"],
-                          points: data[0]["DriverStandings"][index]["points"],
-                          wikipedia: data[0]["DriverStandings"][index]["Driver"]
-                              ["url"],
-                        ),
-                      ),
-                    );
-                  },
-                  child: _line(data, index),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Container _line(List<dynamic> data, int index) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _position(data, index),
-          _driverName(data, index),
-          _constructor(data, index),
-          _points(data, index),
-        ],
-      ),
-    );
-  }
-
-  SizedBox _points(List<dynamic> data, int index) {
-    return SizedBox(
-      width: 50,
-      height: 80,
-      child: Center(
-        child: Text(
-          data[0]["DriverStandings"][index]["points"],
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.black,
-            fontSize: 15,
-          ),
-        ),
-      ),
-    );
-  }
-
-  SizedBox _constructor(List<dynamic> data, int index) {
-    return SizedBox(
-      width: 90,
-      height: 80,
-      child: Center(
-        child: Text(
-          data[0]["DriverStandings"][index]["Constructors"][0]["name"],
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.black,
-            fontSize: 15,
-          ),
-        ),
-      ),
-    );
-  }
-
-  SizedBox _driverName(List<dynamic> data, int index) {
-    return SizedBox(
-      width: 100,
-      height: 80,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            data[0]["DriverStandings"][index]["Driver"]["givenName"],
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.black,
-              fontSize: 15,
-            ),
-          ),
-          Text(
-            data[0]["DriverStandings"][index]["Driver"]["familyName"],
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.black,
-              fontSize: 15,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container _position(List<dynamic> data, int index) {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        color: AppColors.black,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Center(
-        child: Text(
-          data[0]["DriverStandings"][index]["position"],
-          style: const TextStyle(
-            color: AppColors.white,
-            fontSize: 12,
-          ),
         ),
       ),
     );
@@ -350,6 +188,159 @@ class _FixtureScreenState extends State<FixtureScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container _list(List<dynamic> data) {
+    return Container(
+      color: AppColors.white,
+      child: Center(
+        child: ListView.builder(
+          itemCount: data[0]["Results"].length,
+          itemBuilder: (context, index) {
+            return _dialog(context, data, index);
+          },
+        ),
+      ),
+    );
+  }
+
+  InkWell _dialog(BuildContext context, List<dynamic> data, int index) {
+    return InkWell(
+      onTap: () => showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            insetPadding: EdgeInsets.all(0),
+            content: WeeklyDialog(
+              eventName: data[0]["raceName"],
+              eventDate: data[0]["date"].toString().split("-")[0],
+              driverPosition: data[0]["Results"][index]["position"],
+              driverName: data[0]["Results"][index]["Driver"]["givenName"] +
+                  " " +
+                  data[0]["Results"][index]["Driver"]["familyName"],
+              driverGrid: data[0]["Results"][index]["grid"],
+              isFinished: data[0]["Results"][index]["status"] == "Finished"
+                  ? true
+                  : false,
+              driverTime: data[0]["Results"][index]["Time"] == null
+                  ? "N/A"
+                  : data[0]["Results"][index]["Time"]["time"],
+              driverSpeed: data[0]["Results"][index]["FastestLap"]
+                      ["AverageSpeed"]["speed"] +
+                  " " +
+                  data[0]["Results"][index]["FastestLap"]["AverageSpeed"]
+                      ["units"],
+            ),
+          );
+        },
+      ),
+      child: _line(index, data),
+    );
+  }
+
+  Container _line(int index, List<dynamic> data) {
+    return Container(
+      child: Material(
+        color: index % 2 != 0 ? AppColors.primaryColorTint20 : AppColors.white,
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _position(data, index),
+              _driverName(data, index),
+              _constructor(data, index),
+              _points(data, index),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox _points(List<dynamic> data, int index) {
+    return SizedBox(
+      width: 50,
+      height: 80,
+      child: Center(
+        child: Text(
+          data[0]["Results"][index]["points"],
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: AppColors.black,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox _constructor(List<dynamic> data, int index) {
+    return SizedBox(
+      width: 90,
+      height: 80,
+      child: Center(
+        child: Text(
+          data[0]["Results"][index]["Constructor"]["name"],
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: AppColors.black,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox _driverName(List<dynamic> data, int index) {
+    return SizedBox(
+      width: 100,
+      height: 80,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            data[0]["Results"][index]["Driver"]["givenName"],
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppColors.black,
+              fontSize: 15,
+            ),
+          ),
+          Text(
+            data[0]["Results"][index]["Driver"]["familyName"],
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppColors.black,
+              fontSize: 15,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _position(List<dynamic> data, int index) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: AppColors.black,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Center(
+        child: Text(
+          data[0]["Results"][index]["position"],
+          style: const TextStyle(
+            color: AppColors.white,
+            fontSize: 12,
+          ),
         ),
       ),
     );
