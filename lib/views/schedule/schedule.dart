@@ -1,9 +1,9 @@
 import 'package:f1_flutter/views/components/skeleton.dart';
 import 'package:f1_flutter/views/schedule/schedule_dialog.dart';
 import 'package:flutter/material.dart';
+import './notification_button.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../constants/colors.dart';
-import '../../services/notification_service.dart';
 import 'models/race.dart';
 import 'models/race_data_source.dart';
 import 'package:http/http.dart' as http;
@@ -17,8 +17,6 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  var notificationService = NotificationService();
-
   Future<List<dynamic>> getData() async {
     var url = Uri.https('ergast.com', '/api/f1/current.json', {'q': '{http}'});
 
@@ -37,29 +35,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    notificationService.initNotification();
     getData();
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return ElevatedButton(
-  //       onPressed: () {
-  //         notificationService.showNotification(
-  //           title: "Test",
-  //           body: "Test1",
-  //         );
-  //         DateTime scheduledDate = DateTime.now()
-  //             .add(Duration(minutes: 1)); // Örnek olarak 1 saat sonra
-  //         notificationService.scheduleNotification(
-  //           id: 1,
-  //           title: 'Bildirim Başlığı',
-  //           body: 'Bildirim İçeriği',
-  //           scheduledDate: scheduledDate,
-  //         );
-  //       },
-  //       child: Text("Send Noti"));
-  // }
 
   List<Race> _getDataSource(List<dynamic> data) {
     final List<Race> races = <Race>[];
@@ -96,6 +73,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       appBar: AppBar(
         title: const Text('Schedule', style: TextStyle(color: Colors.black)),
         backgroundColor: AppColors.primaryColorLight,
+        actions: [
+          NotificationButton(),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -179,17 +159,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                 DateTime eventDate = details.appointments?[0].getFrom() ?? "";
                 String year = eventDate.year.toString();
-                // String eventTime = eventDate.substring(0, eventDate.length - 3);
-                // String year = eventDate.split("-")[0];
-                // String month = eventDate.split("-")[1].startsWith("0")
-                //     ? eventDate.split("-")[1].substring(1)
-                //     : eventDate.split("-")[1];
-                // String day = eventDate.split("-")[2].startsWith("0")
-                //     ? eventDate.split("-")[2].substring(1, 2)
-                //     : eventDate.split("-")[2].substring(0, 2);
-
-                // String hour = eventTime.split(" ")[1].split(":")[0];
-                // String minute = eventTime.split(" ")[1].split(":")[1];
 
                 String eventUrl = details.appointments?[0]
                         .getEventUrl()

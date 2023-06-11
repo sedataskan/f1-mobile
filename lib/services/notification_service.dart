@@ -61,4 +61,8 @@ class NotificationService {
       payload: payload,
     );
   }
+
+  cancelAllNotifications() async {
+    await notificationsPlugin.cancelAll();
+  }
 }
