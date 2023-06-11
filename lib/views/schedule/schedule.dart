@@ -1,6 +1,7 @@
 import 'package:f1_flutter/views/components/skeleton.dart';
 import 'package:f1_flutter/views/schedule/schedule_dialog.dart';
 import 'package:flutter/material.dart';
+import './notification_button.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../constants/colors.dart';
 import '../../services/notification_service.dart';
@@ -17,8 +18,6 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  var notificationService = NotificationService();
-
   Future<List<dynamic>> getData() async {
     var url = Uri.https('ergast.com', '/api/f1/current.json', {'q': '{http}'});
 
@@ -37,7 +36,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    notificationService.initNotification();
     getData();
   }
 
@@ -96,6 +94,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       appBar: AppBar(
         title: const Text('Schedule', style: TextStyle(color: Colors.black)),
         backgroundColor: AppColors.primaryColorLight,
+        actions: [
+          NotificationButton(),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {

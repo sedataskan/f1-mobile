@@ -43,6 +43,7 @@ dependencies:
   syncfusion_flutter_calendar: ^21.2.8
   instant: ^0.5.1
   skeletons: ^0.0.3
+  localstorage: ^4.0.1+2
 
 flutter_native_splash:
   color: "#F6F6F6"
