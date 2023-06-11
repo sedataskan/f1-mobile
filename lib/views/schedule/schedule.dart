@@ -39,26 +39,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     getData();
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return ElevatedButton(
-  //       onPressed: () {
-  //         notificationService.showNotification(
-  //           title: "Test",
-  //           body: "Test1",
-  //         );
-  //         DateTime scheduledDate = DateTime.now()
-  //             .add(Duration(minutes: 1)); // Örnek olarak 1 saat sonra
-  //         notificationService.scheduleNotification(
-  //           id: 1,
-  //           title: 'Bildirim Başlığı',
-  //           body: 'Bildirim İçeriği',
-  //           scheduledDate: scheduledDate,
-  //         );
-  //       },
-  //       child: Text("Send Noti"));
-  // }
-
   List<Race> _getDataSource(List<dynamic> data) {
     final List<Race> races = <Race>[];
     final DateTime today = DateTime.now();

@@ -46,13 +46,60 @@ class _NotificationButtonState extends State<NotificationButton> {
           notification_activity ? Icons.notifications : Icons.notifications_off,
           color: Colors.black),
       onPressed: () {
-        // print(storage.getItem("notification_activity"));
-        storage.setItem("notification_activity", !notification_activity);
-        setState(() {
-          notification_activity = !notification_activity;
-        });
+        // confirm dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Notifications"),
+              content: notification_activity
+                  ? Text("Do you want to turn off notifications?")
+                  : Text("Do you want to turn on notifications?"),
+              actions: [
+                TextButton(
+                  child: Text("Hayır"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text("Evet"),
+                  onPressed: () {
+                    storage.setItem(
+                        "notification_activity", !notification_activity);
+                    setState(() {
+                      notification_activity = !notification_activity;
+                    });
 
-        print(notification_activity);
+                    if (notification_activity) {
+                      DateTime scheduledDate = DateTime.now().add(
+                          Duration(seconds: 5)); // Örnek olarak 1 saat sonra
+                      notificationService.scheduleNotification(
+                        id: 1,
+                        title: '1',
+                        body: 'Bildirim İçeriği',
+                        scheduledDate: scheduledDate,
+                      );
+                      DateTime scheduledDate2 = DateTime.now().add(
+                          Duration(seconds: 10)); // Örnek olarak 1 saat sonra
+                      notificationService.scheduleNotification(
+                        id: 2,
+                        title: '2',
+                        body: 'Bildirim İçeriği',
+                        scheduledDate: scheduledDate2,
+                      );
+                    } else {
+                      notificationService.cancelAllNotifications();
+                    }
+
+                    print(notification_activity);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       },
     );
   }
