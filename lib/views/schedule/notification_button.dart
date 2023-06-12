@@ -110,18 +110,14 @@ class _NotificationButtonState extends State<NotificationButton> {
                             .toLocal();
 
                         if (date.isAfter(today)) {
-                          // DateTime testDate =
-                          //     DateTime.now().add(Duration(seconds: 5));
+                          DateTime testDate =
+                              DateTime.now().add(Duration(seconds: 5));
                           DateTime scheduledDate =
                               date.subtract(Duration(hours: 1));
 
-                          PermissionStatus statusNotification =
-                              await Permission.notification.request();
-
-                          bool isGranted =
-                              statusNotification == PermissionStatus.granted;
-
-                          if (isGranted) {
+                          if (await Permission.notification
+                              .request()
+                              .isGranted) {
                             notificationService.scheduleNotification(
                               id: int.parse(data[i]["round"]),
                               title: "Race Time!",
@@ -129,7 +125,7 @@ class _NotificationButtonState extends State<NotificationButton> {
                                   "GP" +
                                   " - " +
                                   DateFormatter.getFormattedTime(date),
-                              scheduledDate: scheduledDate,
+                              scheduledDate: testDate,
                             );
                           } else {
                             setState(() {
