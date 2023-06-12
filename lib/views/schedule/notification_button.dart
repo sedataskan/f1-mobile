@@ -62,7 +62,7 @@ class _NotificationButtonState extends State<NotificationButton> {
     return IconButton(
       icon: Icon(
           notification_activity ? Icons.notifications : Icons.notifications_off,
-          color: Colors.black),
+          color: AppColors.black),
       onPressed: () {
         // confirm dialog
         showDialog(
@@ -75,13 +75,14 @@ class _NotificationButtonState extends State<NotificationButton> {
                   : Text("Do you want to turn on notifications?"),
               actions: [
                 TextButton(
-                  child: Text("Hayır"),
+                  child: Text("No", style: TextStyle(color: AppColors.past)),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text("Evet"),
+                  child: Text("Yes",
+                      style: TextStyle(color: AppColors.primaryColor)),
                   onPressed: () async {
                     storage.setItem(
                         "notification_activity", !notification_activity);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import '../components/indicator.dart';
 import 'champions_item.dart';
 
 class ChampionsScreen extends StatefulWidget {
@@ -42,13 +43,7 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: AppColors.primaryColorLight, title: _buildHeader()),
-      body: RefreshIndicator(
-        color: AppColors.primaryColor,
-        onRefresh: () async {
-          setState(() {
-            getData();
-          });
-        },
+      body: PlaneIndicator(
         child: FutureBuilder(
           future: getData(),
           builder: (context, snapshot) {

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import '../components/indicator.dart';
+
 class WeeklyScreen extends StatefulWidget {
   const WeeklyScreen({super.key});
   @override
@@ -52,13 +54,7 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
       appBar: AppBar(
           backgroundColor: AppColors.primaryColorLight,
           title: _buildTopHeader()),
-      body: RefreshIndicator(
-        color: AppColors.primaryColor,
-        onRefresh: () async {
-          setState(() {
-            getData();
-          });
-        },
+      body: PlaneIndicator(
         child: Column(
           children: [
             _buildBottomHeader(),
