@@ -2,6 +2,7 @@ import 'package:f1_flutter/helper/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:f1_flutter/constants/colors.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../services/notification_service.dart';
 import 'package:http/http.dart' as http;
@@ -114,15 +115,28 @@ class _NotificationButtonState extends State<NotificationButton> {
                           DateTime scheduledDate =
                               date.subtract(Duration(hours: 1));
 
-                          notificationService.scheduleNotification(
-                            id: int.parse(data[i]["round"]),
-                            title: "Race Time!",
-                            body: data[i]["raceName"].split("Grand")[0] +
-                                "GP" +
-                                " - " +
-                                DateFormatter.getFormattedTime(date),
-                            scheduledDate: scheduledDate,
-                          );
+                          PermissionStatus statusNotification =
+                              await Permission.notification.request();
+
+                          bool isGranted =
+                              statusNotification == PermissionStatus.granted;
+
+                          if (isGranted) {
+                            notificationService.scheduleNotification(
+                              id: int.parse(data[i]["round"]),
+                              title: "Race Time!",
+                              body: data[i]["raceName"].split("Grand")[0] +
+                                  "GP" +
+                                  " - " +
+                                  DateFormatter.getFormattedTime(date),
+                              scheduledDate: scheduledDate,
+                            );
+                          } else {
+                            setState(() {
+                              notification_activity = false;
+                            });
+                            storage.setItem("notification_activity", false);
+                          }
                         }
                       }
                     } else {
