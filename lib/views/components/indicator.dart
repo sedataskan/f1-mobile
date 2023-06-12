@@ -3,7 +3,7 @@ import 'package:f1_flutter/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class _Cloud {
-  static const _light = AppColors.primaryColor;
+  static const _light = AppColors.primaryColorTint20;
   static const _dark = AppColors.primaryColorDark;
   static const _normal = AppColors.white;
 
@@ -261,9 +261,9 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
                                 Center(
                                   child: OverflowBox(
                                     child: car,
-                                    maxWidth: 172,
+                                    maxWidth: 300,
                                     minWidth: 172,
-                                    maxHeight: 50,
+                                    maxHeight: 70,
                                     minHeight: 50,
                                     alignment: Alignment.bottomCenter,
                                   ),
