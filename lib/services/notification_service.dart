@@ -24,7 +24,7 @@ class NotificationService {
 
   notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails('flutter_noti1', 'channelName',
+        android: AndroidNotificationDetails('f1_pulse', 'channelName',
             importance: Importance.max),
         iOS: DarwinNotificationDetails());
   }
@@ -43,7 +43,7 @@ class NotificationService {
     String? payload,
   }) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'flutter_noti1', 'channelName',
+        'f1_pulse', 'channel_name',
         importance: Importance.max, priority: Priority.high, playSound: true);
     var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(

@@ -45,6 +45,7 @@ dependencies:
   skeletons: ^0.0.3
   localstorage: ^4.0.1+2
   custom_refresh_indicator: ^2.0.1
+  permission_handler: ^10.3.0
 
 flutter_native_splash:
   color: "#F6F6F6"
