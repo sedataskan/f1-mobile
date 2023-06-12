@@ -1,4 +1,5 @@
 import 'package:f1_flutter/constants/colors.dart';
+import 'package:f1_flutter/views/components/indicator.dart';
 import 'package:f1_flutter/views/components/skeleton.dart';
 import 'package:f1_flutter/views/fixture/fixture_item.dart';
 import 'package:f1_flutter/views/weekly/weekly.dart';
@@ -73,13 +74,7 @@ class _FixtureScreenState extends State<FixtureScreen> {
           ],
         ),
       ),
-      body: RefreshIndicator(
-        color: AppColors.primaryColor,
-        onRefresh: () async {
-          setState(() {
-            getData();
-          });
-        },
+      body: PlaneIndicator(
         child: Column(
           children: [
             _buildBottomHeader(),
