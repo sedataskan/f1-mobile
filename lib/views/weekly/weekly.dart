@@ -221,6 +221,12 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
                   " " +
                   data[0]["Results"][index]["Driver"]["familyName"],
               driverGrid: data[0]["Results"][index]["grid"],
+              driverfastestLap: data[0]["Results"][index]["FastestLap"]
+                      ["rank"] +
+                  " " +
+                  data[0]["Results"][index]["FastestLap"]["lap"] +
+                  " " +
+                  data[0]["Results"][index]["FastestLap"]["Time"]["time"],
               isFinished: data[0]["Results"][index]["status"] == "Finished"
                   ? true
                   : false,

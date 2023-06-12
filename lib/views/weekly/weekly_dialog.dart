@@ -9,6 +9,7 @@ class WeeklyDialog extends StatefulWidget {
     required this.driverName,
     required this.driverPosition,
     required this.driverGrid,
+    required this.driverfastestLap,
     required this.isFinished,
     required this.driverTime,
     required this.driverSpeed,
@@ -19,6 +20,7 @@ class WeeklyDialog extends StatefulWidget {
   final String eventDate;
   final String driverName;
   final String driverGrid;
+  final String driverfastestLap;
   final String driverTime;
   final String driverSpeed;
   final bool isFinished;
@@ -45,13 +47,14 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
         widget.eventDate,
         widget.driverName,
         widget.driverGrid,
+        widget.driverfastestLap,
         widget.driverTime,
         widget.driverSpeed,
         widget.isFinished);
   }
 
   _dialog(eventName, driverPosition, eventDate, driverName, driverGrid,
-      driverTime, driverSpeed, isFinished) {
+      driverfastestLap, driverTime, driverSpeed, isFinished) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -69,6 +72,13 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
           _speed(driverSpeed),
           SizedBox(height: 10),
           _isFinished(isFinished),
+          SizedBox(height: 10),
+          Divider(
+            color: AppColors.primaryColor,
+            thickness: 2,
+          ),
+          SizedBox(height: 10),
+          _fastestLap(driverfastestLap),
         ],
       ),
     );
@@ -82,7 +92,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
           padding: const EdgeInsets.only(right: 8.0),
           child: Text(
             isFinished ? "Finished" : "Not Finished",
-            style: TextStyle(fontSize: 15),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ),
         Icon(
@@ -182,6 +192,66 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
           eventDate,
           style: TextStyle(fontSize: 15),
           overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
+  Column _fastestLap(driverfastestLap) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              "Fastest Lap ",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Text(
+              "    Rank: ",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              driverfastestLap.split(" ")[0],
+              style: TextStyle(fontSize: 15),
+            ),
+            Icon(
+              //if rank == 1 then its color is purple else its color is grey
+              Icons.timer,
+              color: driverfastestLap.split(" ")[0] == "1"
+                  ? AppColors.purple
+                  : AppColors.primaryColor,
+              size: 20,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Text(
+              "    Lap: ",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              driverfastestLap.split(" ")[1],
+              style: TextStyle(fontSize: 15),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Text(
+              "    Time: ",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              driverfastestLap.split(" ")[2] + " s",
+              style: TextStyle(fontSize: 15),
+            ),
+          ],
         ),
       ],
     );

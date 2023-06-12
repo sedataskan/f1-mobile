@@ -158,7 +158,7 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.white,
           shape: StadiumBorder(),
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         ),
@@ -172,7 +172,7 @@ AppBar buildAppBar(BuildContext context) {
     leading: BackButton(
       color: Colors.black,
     ),
-    backgroundColor: AppColors.primaryColorTint20,
+    backgroundColor: AppColors.primaryColorLight,
     elevation: 0,
   );
 }
