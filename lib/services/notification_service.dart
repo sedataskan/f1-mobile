@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:f1_flutter/constants/colors.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -6,7 +10,7 @@ class NotificationService {
 
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('flutter_logo');
+        const AndroidInitializationSettings('logo');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -24,7 +28,7 @@ class NotificationService {
 
   notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails('f1_pulse', 'channelName',
+        android: AndroidNotificationDetails('f1_pulse', 'F1 Pulse',
             importance: Importance.max),
         iOS: DarwinNotificationDetails());
   }
@@ -44,7 +48,13 @@ class NotificationService {
   }) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'f1_pulse', 'channel_name',
-        importance: Importance.max, priority: Priority.high, playSound: true);
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        icon: 'logo',
+        channelShowBadge: false,
+        color: AppColors.primaryColor,
+        largeIcon: DrawableResourceAndroidBitmap('logo'));
     var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
