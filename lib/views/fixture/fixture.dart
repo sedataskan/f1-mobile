@@ -111,39 +111,40 @@ class _FixtureScreenState extends State<FixtureScreen> {
         child: ListView.builder(
           itemCount: data[0]["DriverStandings"].length,
           itemBuilder: (context, index) {
-            return Container(
-              child: Material(
-                color: index % 2 != 0
-                    ? AppColors.primaryColorTint20
-                    : AppColors.white,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FixtureItem(
-                          position: data[0]["DriverStandings"][index]
-                              ["position"],
-                          driverName: data[0]["DriverStandings"][index]
-                                  ["Driver"]["givenName"] +
-                              " " +
-                              data[0]["DriverStandings"][index]["Driver"]
-                                  ["familyName"],
-                          constructorName: data[0]["DriverStandings"][index]
-                              ["Constructors"][0]["name"],
-                          points: data[0]["DriverStandings"][index]["points"],
-                          wikipedia: data[0]["DriverStandings"][index]["Driver"]
-                              ["url"],
-                        ),
-                      ),
-                    );
-                  },
-                  child: _line(data, index),
-                ),
-              ),
-            );
+            return _card(data, index);
           },
         ),
+      ),
+    );
+  }
+
+  _card(data, index) {
+    return Card(
+      color: index % 2 != 0 ? AppColors.primaryColorTint20 : AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: const EdgeInsets.all(7),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FixtureItem(
+                position: data[0]["DriverStandings"][index]["position"],
+                driverName: data[0]["DriverStandings"][index]["Driver"]
+                        ["givenName"] +
+                    " " +
+                    data[0]["DriverStandings"][index]["Driver"]["familyName"],
+                constructorName: data[0]["DriverStandings"][index]
+                    ["Constructors"][0]["name"],
+                points: data[0]["DriverStandings"][index]["points"],
+                wikipedia: data[0]["DriverStandings"][index]["Driver"]["url"],
+              ),
+            ),
+          );
+        },
+        child: _line(data, index),
       ),
     );
   }
