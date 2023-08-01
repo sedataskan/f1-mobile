@@ -196,53 +196,60 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
         child: ListView.builder(
           itemCount: data[0]["Results"].length,
           itemBuilder: (context, index) {
-            return _dialog(context, data, index);
+            return _card(context, data, index);
           },
         ),
       ),
     );
   }
 
-  InkWell _dialog(BuildContext context, List<dynamic> data, int index) {
-    return InkWell(
-      onTap: () => showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            insetPadding: EdgeInsets.all(0),
-            content: WeeklyDialog(
-              eventName: data[0]["raceName"],
-              eventDate: data[0]["date"].toString().split("-")[0],
-              driverPosition: data[0]["Results"][index]["position"],
-              driverName: data[0]["Results"][index]["Driver"]["givenName"] +
-                  " " +
-                  data[0]["Results"][index]["Driver"]["familyName"],
-              driverGrid: data[0]["Results"][index]["grid"],
-              driverfastestLap: data[0]["Results"][index]["FastestLap"]
-                      ["rank"] +
-                  " " +
-                  data[0]["Results"][index]["FastestLap"]["lap"] +
-                  " " +
-                  data[0]["Results"][index]["FastestLap"]["Time"]["time"],
-              isFinished: data[0]["Results"][index]["status"] == "Finished"
-                  ? true
-                  : false,
-              driverTime: data[0]["Results"][index]["Time"] == null
-                  ? "N/A"
-                  : data[0]["Results"][index]["Time"]["time"],
-              driverSpeed: data[0]["Results"][index]["FastestLap"]
-                      ["AverageSpeed"]["speed"] +
-                  " " +
-                  data[0]["Results"][index]["FastestLap"]["AverageSpeed"]
-                      ["units"],
-            ),
-          );
-        },
+  _card(BuildContext context, List<dynamic> data, int index) {
+    return Card(
+      color: index % 2 != 0 ? AppColors.primaryColorTint20 : AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
       ),
-      child: _line(index, data),
+      margin: const EdgeInsets.all(7),
+      child: InkWell(
+        onTap: () => showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              insetPadding: EdgeInsets.all(0),
+              content: WeeklyDialog(
+                eventName: data[0]["raceName"],
+                eventDate: data[0]["date"].toString().split("-")[0],
+                driverPosition: data[0]["Results"][index]["position"],
+                driverName: data[0]["Results"][index]["Driver"]["givenName"] +
+                    " " +
+                    data[0]["Results"][index]["Driver"]["familyName"],
+                driverGrid: data[0]["Results"][index]["grid"],
+                driverfastestLap: data[0]["Results"][index]["FastestLap"]
+                        ["rank"] +
+                    " " +
+                    data[0]["Results"][index]["FastestLap"]["lap"] +
+                    " " +
+                    data[0]["Results"][index]["FastestLap"]["Time"]["time"],
+                isFinished: data[0]["Results"][index]["status"] == "Finished"
+                    ? true
+                    : false,
+                driverTime: data[0]["Results"][index]["Time"] == null
+                    ? "N/A"
+                    : data[0]["Results"][index]["Time"]["time"],
+                driverSpeed: data[0]["Results"][index]["FastestLap"]
+                        ["AverageSpeed"]["speed"] +
+                    " " +
+                    data[0]["Results"][index]["FastestLap"]["AverageSpeed"]
+                        ["units"],
+              ),
+            );
+          },
+        ),
+        child: _line(index, data),
+      ),
     );
   }
 
