@@ -73,43 +73,7 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
         child: ListView.builder(
           itemCount: data.length,
           itemBuilder: (context, index) {
-            return Container(
-              color: index % 2 != 0
-                  ? AppColors.primaryColorTint20
-                  : AppColors.white,
-              padding: const EdgeInsets.all(10.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChampionsItem(
-                        driverName: data[index]["DriverStandings"][0]["Driver"]
-                                ["givenName"] +
-                            " " +
-                            data[index]["DriverStandings"][0]["Driver"]
-                                ["familyName"],
-                        constructorName: data[index]["DriverStandings"][0]
-                            ["Constructors"][0]["name"],
-                        season: data[index]["season"],
-                        points: data[index]["DriverStandings"][0]["points"],
-                        wikipedia: data[index]["DriverStandings"][0]["Driver"]
-                            ["url"],
-                      ),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _season(data, index),
-                    _name(data, index),
-                    _constructor(data, index),
-                    _points(data, index),
-                  ],
-                ),
-              ),
-            );
+            return _card(data, index);
           },
         ),
       ),
@@ -254,6 +218,48 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  _card(data, index) {
+    return Card(
+      color: index % 2 != 0 ? AppColors.primaryColorTint20 : AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: const EdgeInsets.all(7),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChampionsItem(
+                driverName: data[index]["DriverStandings"][0]["Driver"]
+                        ["givenName"] +
+                    " " +
+                    data[index]["DriverStandings"][0]["Driver"]["familyName"],
+                constructorName: data[index]["DriverStandings"][0]
+                    ["Constructors"][0]["name"],
+                season: data[index]["season"],
+                points: data[index]["DriverStandings"][0]["points"],
+                wikipedia: data[index]["DriverStandings"][0]["Driver"]["url"],
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _season(data, index),
+              _name(data, index),
+              _constructor(data, index),
+              _points(data, index),
+            ],
+          ),
+        ),
       ),
     );
   }
