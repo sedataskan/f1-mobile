@@ -12,7 +12,6 @@ class WeeklyDialog extends StatefulWidget {
     required this.driverfastestLap,
     required this.isFinished,
     required this.driverTime,
-    required this.driverSpeed,
   });
 
   final String eventName;
@@ -20,9 +19,8 @@ class WeeklyDialog extends StatefulWidget {
   final String eventDate;
   final String driverName;
   final String driverGrid;
-  final String driverfastestLap;
+  final dynamic driverfastestLap;
   final String driverTime;
-  final String driverSpeed;
   final bool isFinished;
 
   @override
@@ -49,12 +47,11 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
         widget.driverGrid,
         widget.driverfastestLap,
         widget.driverTime,
-        widget.driverSpeed,
         widget.isFinished);
   }
 
   _dialog(eventName, driverPosition, eventDate, driverName, driverGrid,
-      driverfastestLap, driverTime, driverSpeed, isFinished) {
+      driverfastestLap, driverTime, isFinished) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +66,10 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
           SizedBox(height: 10),
           _time(driverTime),
           SizedBox(height: 10),
-          _speed(driverSpeed),
+          // _speed(driverSpeed),
+          driverfastestLap["laps"] != "0"
+              ? _speed(driverfastestLap["FastestLap"]["AverageSpeed"])
+              : Container(),
           SizedBox(height: 10),
           _isFinished(isFinished),
           SizedBox(height: 10),
@@ -78,7 +78,10 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
             thickness: 2,
           ),
           SizedBox(height: 10),
-          _fastestLap(driverfastestLap),
+          driverfastestLap["laps"] != "0"
+              ? _fastestLap(driverfastestLap)
+              : Container(),
+          // _fastestLap(driverfastestLap),
         ],
       ),
     );
@@ -112,7 +115,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         Text(
-          driverSpeed,
+          driverSpeed["speed"] + " " + driverSpeed["units"],
           style: TextStyle(fontSize: 15),
         ),
       ],
@@ -216,13 +219,13 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             Text(
-              driverfastestLap.split(" ")[0],
+              driverfastestLap["FastestLap"]["rank"],
               style: TextStyle(fontSize: 15),
             ),
             Icon(
               //if rank == 1 then its color is purple else its color is grey
               Icons.timer,
-              color: driverfastestLap.split(" ")[0] == "1"
+              color: driverfastestLap["FastestLap"]["rank"] == "1"
                   ? AppColors.purple
                   : AppColors.primaryColor,
               size: 20,
@@ -236,7 +239,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             Text(
-              driverfastestLap.split(" ")[1],
+              driverfastestLap["FastestLap"]["lap"],
               style: TextStyle(fontSize: 15),
             ),
           ],
@@ -248,11 +251,27 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             Text(
-              driverfastestLap.split(" ")[2] + " s",
+              driverfastestLap["FastestLap"]["Time"]["time"] + " s",
               style: TextStyle(fontSize: 15),
             ),
           ],
         ),
+      ],
+    );
+  }
+
+  Column _missing() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              "Can not Found Fastest Lap ",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 5),
       ],
     );
   }
