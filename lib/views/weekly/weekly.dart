@@ -227,23 +227,13 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
                     " " +
                     data[0]["Results"][index]["Driver"]["familyName"],
                 driverGrid: data[0]["Results"][index]["grid"],
-                driverfastestLap: data[0]["Results"][index]["FastestLap"]
-                        ["rank"] +
-                    " " +
-                    data[0]["Results"][index]["FastestLap"]["lap"] +
-                    " " +
-                    data[0]["Results"][index]["FastestLap"]["Time"]["time"],
+                driverfastestLap: data[0]["Results"][index],
                 isFinished: data[0]["Results"][index]["status"] == "Finished"
                     ? true
                     : false,
                 driverTime: data[0]["Results"][index]["Time"] == null
                     ? "N/A"
                     : data[0]["Results"][index]["Time"]["time"],
-                driverSpeed: data[0]["Results"][index]["FastestLap"]
-                        ["AverageSpeed"]["speed"] +
-                    " " +
-                    data[0]["Results"][index]["FastestLap"]["AverageSpeed"]
-                        ["units"],
               ),
             );
           },

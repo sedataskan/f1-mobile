@@ -39,10 +39,8 @@ class _FixtureItemState extends State<FixtureItem> {
 
   Future<void> getData(String wikipediaTitle) async {
     try {
-      var url = Uri.https(
-          'en.wikipedia.org',
-          '/api/rest_v1/page/mobile-sections-lead/' +
-              Uri.decodeComponent(wikipediaTitle));
+      var url = Uri.https('en.wikipedia.org',
+          '/api/rest_v1/page/summary/' + Uri.decodeComponent(wikipediaTitle));
 
       // Await the http get response, then decode the json-formatted response.
       var response = await http.get(url);
@@ -52,7 +50,7 @@ class _FixtureItemState extends State<FixtureItem> {
             convert.jsonDecode(response.body) as Map<String, dynamic>;
 
         setState(() {
-          imageLink = jsonResponse["image"]["urls"]["320"];
+          imageLink = jsonResponse["thumbnail"]["source"];
           about = jsonResponse["description"];
         });
       } else {
