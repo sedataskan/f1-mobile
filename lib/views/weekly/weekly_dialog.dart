@@ -259,20 +259,4 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
       ],
     );
   }
-
-  Column _missing() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              "Can not Found Fastest Lap ",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        SizedBox(height: 5),
-      ],
-    );
-  }
 }
