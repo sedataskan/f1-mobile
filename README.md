@@ -1,3 +1,8 @@
+## ⚠️ **Archived**
+
+This project is no longer maintained. The Ergast API used in this app was **deprecated at the end of 2024** and is no longer available. Therefore, the app no longer functions as intended.
+
+----
 <p align="center">
   <h1> F1 Pulse </h1>
 </p>
